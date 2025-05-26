@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Professional product details management system">
+    <title>Product Details | Al Nahla</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        /* Professional Color Scheme */
+        :root {
+            --primary-color: #2c3e50;
+            --primary-hover-color: #1a252f;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --accent-hover-color: #2980b9;
+            --success-color: #27ae60;
+            --success-hover-color: #219653;
+            --border-color: #e0e0e0;
+            --background-light: #f5f7fa;
+            --background-white: #ffffff;
+            --text-dark: #333333;
+            --text-medium: #555555;
+            --text-light: #777777;
+            --shadow-subtle: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --shadow-deep: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --font-family-base: 'Roboto', sans-serif;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: var(--font-family-base);
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: var(--background-white);
+            box-shadow: var(--shadow-subtle);
+            border-radius: 8px;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-space {
+            height: 60px;
+            margin-right: 20px;
+        }
+
+        .logo-space img {
+            height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .header-title {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        .system-title {
+            color: var(--text-medium);
+            font-size: 16px;
+            font-weight: 400;
+            margin-top: 5px;
+        }
+
+        /* Product Details Styles */
+        .detail-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-title {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .detail-subtitle {
+            margin: 5px 0 0;
+            font-size: 15px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .back-button {
+            background-color: white;
+            color: var(--primary-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .back-button svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .product-history {
+            margin-top: 30px;
+        }
+
+        .history-item {
+            background-color: var(--background-white);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 4px;
+            box-shadow: var(--shadow-subtle);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            box-shadow: var(--shadow-deep);
+            transform: translateY(-2px);
+        }
+
+        .history-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .detail-item {
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: var(--text-medium);
+            font-size: 14px;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            color: var(--text-dark);
+            font-size: 15px;
+        }
+
+        .item-code {
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .quantity {
+            color: var(--success-color);
+            font-weight: 500;
+        }
+
+        .reserved {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+        .net-quantity {
+            color: #2ecc71;
+            font-weight: 500;
+        }
+
+        .store {
+            color: #9b59b6;
+            font-weight: 500;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            background-color: var(--background-white);
+            border-radius: 8px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .empty-icon {
+            color: #bdc3c7;
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-text {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .logo-container {
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .detail-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-title {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                margin: 15px;
+                padding: 15px;
+            }
+            
+            .header-title {
+                font-size: 22px;
+            }
+            
+            .detail-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo-space">
+                    <img src="{{ url_for('static', filename='Al nahla logo text final (2)_page-0001 (1).jpg') }}" alt="Al Nahla Logo">
+                </div>
+                <div>
+                    <h1 class="header-title">Stock Management System</h1>
+                    <div class="system-title">Product Details</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="detail-header">
+            <div>
+                <h2 class="detail-title">Product Details</h2>
+                <p class="detail-subtitle">Complete information and history for this product</p>
+            </div>
+            <button class="back-button" onclick="window.location.href='/'">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Products
+            </button>
+        </div>
+
+        <main>
+            {% if details and details|length > 0 %}
+                <div class="product-history">
+                    {% for detail in details %}
+                        <div class="history-item">
+                            <h3 class="history-title">
+                                {% if loop.index0 == 0 %}
+                                    Original Product Entry
+                                {% else %}
+                                    Update #{{ loop.index }}
+                                {% endif %}
+                            </h3>
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <span class="detail-label">Item Code</span>
+                                    <span class="detail-value item-code">{{ detail[1] }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Particulars</span>
+                                    <span class="detail-value">{{ detail[2] }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Quantity</span>
+                                    <span class="detail-value quantity">{{ detail[3] }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Reserved</span>
+                                    <span class="detail-value reserved">{{ detail[4] }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Net Quantity</span>
+                                    <span class="detail-value net-quantity">{{ detail[3] - detail[4] }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Store Name</span>
+                                    <span class="detail-value store">{{ detail[6] }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Purchase Date</span>
+                                    <span class="detail-value">{{ detail[7] if detail[7] else 'N/A' }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Reservation Date</span>
+                                    <span class="detail-value">{{ detail[8] if detail[8] else 'N/A' }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Customer Name</span>
+                                    <span class="detail-value">{{ detail[9] if detail[9] else 'N/A' }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Engineer Name</span>
+                                    <span class="detail-value">{{ detail[10] if detail[10] else 'N/A' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="empty-title">No Product Details Found</h3>
+                    <p class="empty-text">There are currently no records available for this item code.</p>
+                    <button class="back-button" onclick="window.location.href='/'">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Back to Products
+                    </button>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+</body>
+</html>
